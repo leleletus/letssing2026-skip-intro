@@ -1,0 +1,54 @@
+diff --git a/config.mk b/config.mk
+index 9194e2d..97b4cbb 100644
+--- a/config.mk
++++ b/config.mk
+@@ -7,7 +7,7 @@
+ LOAD_KIND := Module
+ 
+ # Program you're targetting. Used to determine where to deploy your files.
+-PROGRAM_ID := 0100801011c3e000
++PROGRAM_ID := 0100ee4020d18000
+ 
+ # Optional path to copy the final ELF to, for convenience.
+ ELF_EXTRACT :=
+@@ -16,11 +16,11 @@ ELF_EXTRACT :=
+ PYTHON := python3
+ 
+ # JSON to use to make .npdm
+-NPDM_JSON := qlaunch.json
++NPDM_JSON := application.json
+ 
+ # Additional C/C++ flags to use.
+ C_FLAGS := 
+-CXX_FLAGS := 
++CXX_FLAGS := -Wno-error=non-c-typedef-for-linkage
+ 
+ # AsRtld settings
+ #------------------------
+diff --git a/source/rtld.hpp b/source/rtld.hpp
+index 42ff1b9..8b4d5b7 100644
+--- a/source/rtld.hpp
++++ b/source/rtld.hpp
+@@ -41,7 +41,8 @@ namespace nn::ro::detail {
+     extern rtld::ModuleObjectList g_pManualLoadList;
+     extern rtld::ModuleObjectList g_pAutoLoadList;
+     extern bool g_RoDebugFlag;
+-    extern rtld::lookup_global_t g_LookupGlobalManualFunctionPointer;
++    /* weak: not exported by every SDK version (Let's Sing 2026 lacks it) */
++    extern rtld::lookup_global_t g_LookupGlobalManualFunctionPointer __attribute__((weak));
+ };
+ 
+ namespace rtld {
+diff --git a/source/rtld/ModuleObject.cpp b/source/rtld/ModuleObject.cpp
+index f7af1be..fe677f5 100644
+--- a/source/rtld/ModuleObject.cpp
++++ b/source/rtld/ModuleObject.cpp
+@@ -226,7 +226,7 @@ bool ModuleObject::TryResolveSymbol(Elf_Addr *target_symbol_address,
+     } else {
+         Elf_Addr address = lookup_global_auto(name);
+ 
+-        if (address == 0 && ro::g_LookupGlobalManualFunctionPointer) {
++        if (address == 0 && &ro::g_LookupGlobalManualFunctionPointer != nullptr && ro::g_LookupGlobalManualFunctionPointer) {
+             address = ro::g_LookupGlobalManualFunctionPointer(name);
+         }
+ 
