@@ -18,19 +18,20 @@ ejecutable, y esas direcciones cambian con cada actualización.
 | | Compatible |
 |---|---|
 | Juego | Let's Sing 2026 (Nintendo Switch), title ID `0100EE4020D18000` |
-| Actualización | **v131072** (title ID `0100EE4020D18800`), y ninguna otra |
+| Actualización | **v131072** (versión 0.2.0, title ID `0100EE4020D18800`), y ninguna otra |
 | Build ID del ejecutable (`main`) | `1C344DD17322D4FA3E8F50063340C7D0` |
 | Juego base sin actualizar (v0) | No |
 | DLC | No hace falta. Funciona con y sin DLC, con canciones añadidas o sin ellas |
 | Firmware personalizado | Atmosphère (carga `atmosphere/contents/<title ID>/exefs/`) |
-| Emuladores | Sin probar |
+| Emuladores | Citron (nightly `308bc267c`): carga el mod y el juego arranca hasta el menú. El salto en una canción no está probado en el emulador |
 | Otras ediciones (2018 a 2025) | No: son otros juegos, con otro ejecutable |
 
 Probado en una consola real con Atmosphère el 2026-11-01.
 
 ### Cómo saber qué versión tienes
 
-- **DBI** → *Browse installed applications* → Let's Sing 2026: la actualización debe ser `v131072`.
+- **DBI** → *Browse installed applications* → Let's Sing 2026: la actualización debe ser `v131072`
+  (versión 0.2.0).
 - **Build ID**: si tienes un volcado del juego, `hactool -t nso main` muestra el *Build ID* del ejecutable de la
   actualización. También aparece en los registros de error de Atmosphère (`sd:/atmosphere/crash_reports/`).
 
@@ -124,6 +125,6 @@ GPL-2.0, igual que exlaunch, en el que se basa (ver `LICENSE`).
 ---
 
 **English.** Let's Sing 2026 (Switch, Atmosphère) mod: press ZR/ZL (SL/SR on a single Joy-Con) during a song's intro
-to jump to 3 s before the first note (normal mode only). **Only for update v131072, build ID
+to jump to 3 s before the first note (normal mode only). **Only for update v131072 (version 0.2.0), build ID
 `1C344DD17322D4FA3E8F50063340C7D0`**. Install: unzip the release to the root of the SD card. Remove: delete
 `atmosphere/contents/0100EE4020D18000`. Build: `./build.sh` (devkitPro). GPL-2.0.
