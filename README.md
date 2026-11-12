@@ -1,12 +1,20 @@
-# Let's Sing 2026: saltar el intro de las canciones
+# Let's Sing 2026: saltar el intro y el final de las canciones
 
-Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère). En una partida normal, durante el intro de una canción,
-**ZR o ZL** (SL/SR en un Joy-Con suelto) salta a 3 s antes de la primera nota. Usa la función del propio juego para
-moverse en la canción (`InGameSimple.SetTime`): audio, video y letra saltan juntos.
+Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère), con **ZR o ZL** (SL/SR en un Joy-Con suelto):
 
-- Solo funciona si faltan más de 6 s para la primera nota (en canciones con intro corto no hace nada).
-- Solo en la partida normal (`InGameClassic`). Nunca en los modos online (Fest), Feat ni Carrera.
-- Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta.
+- **Saltar el intro**: durante el intro de una canción, **pulsar** el botón salta a 3 s antes de la primera nota.
+- **Saltar el final**: cuando ya no quedan notas y el video sigue, **mantener** el botón 3 s salta a 1 s antes del
+  final. La canción termina como siempre: pantalla de resultados y puntuación guardada.
+
+Usa la función del propio juego para moverse en la canción (`InGameSimple.SetTime`): audio, video y letra saltan
+juntos.
+
+- El intro solo se salta si faltan más de 6 s para la primera nota (en canciones con intro corto no hace nada).
+- El final solo se salta después de la última nota de todas las voces y si quedan más de 2 s. Hay que mantener el
+  botón 3 s seguidos, para que no pase sin querer; al soltarlo, la cuenta empieza de nuevo.
+- Funciona en la partida normal (**Classic**) y en **Feat**. Nunca en los modos online (Fest) ni en Carrera.
+- Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta
+  para saltar el intro.
 - Funciona igual con las canciones oficiales, las de los DLC y las añadidas con
   [Let's Sing UltraStar Converter](https://github.com/leleletus/ultrastar2singIt).
 
@@ -43,7 +51,7 @@ usándolo. Cómo adaptarlo a otra versión: [Adaptarlo a otra versión](#adaptar
 
 ## Instalar / quitar
 
-1. Descarga `letssing2026_saltar_intro_v1.zip` de [Releases](../../releases).
+1. Descarga `letssing2026_saltar_intro_v2.zip` de [Releases](../../releases).
 2. Descomprímelo en la raíz de la SD. Quedan estos dos archivos:
    ```
    sd:/atmosphere/contents/0100EE4020D18000/exefs/subsdk9
@@ -101,22 +109,23 @@ Los nombres de las funciones no cambian entre versiones, pero sus direcciones s�
 1. Saca `exefs/main` y `global-metadata.dat` de la versión nueva (nxdumptool en la consola, con la actualización
    instalada) y pasa los dos por [Il2CppDumper](https://github.com/Perfare/Il2CppDumper).
 2. En `dump.cs`, busca las direcciones (RVA) de las funciones del bloque `offsets` de `source/main.cpp`:
-   `InGameClassic.UpdateVx`, `InGameSimple.SetTime`, `KaraokeManager.get_Instance` y `KaraokeManager.get_KTime`.
-   Comprueba también los campos (`KaraokeManager.KaraokeSong`, `KaraokeSong.KaraokeNotes`,
-   `KaraokeObject.StartTime`).
+   `InGameClassic.UpdateVx`, `InGameSimple.UpdateVx`, `InGameSimple.SetTime`, `KaraokeManager.get_Instance` y
+   `KaraokeManager.get_KTime`. Comprueba también los campos (`InGame.songEnd`, `InGame.karaokeTime`,
+   `KaraokeManager.KaraokeSong`, `KaraokeSong.KaraokeNotes`, `KaraokeSong.KaraokeNotesAll`,
+   `KaraokeObject.StartTime`, `KaraokeObject.EndTime`).
 3. Rehaz `main.npdm` con el de la versión nueva (ver arriba). Actualiza el build ID y la versión en este README.
 
 ## Pendiente
 
 - Que el video salte directo: ahora, tras el salto, se pone al día en un momento (se ve avanzar rápido) y luego sigue
   sincronizado.
-- Terminar la canción al acabar la letra, para canciones cuyo video sigue mucho tiempo después de la última línea.
 
 ## Versiones del mod
 
 | Versión | Juego | Cambios |
 |---|---|---|
 | v1 (2026-11-01) | Let's Sing 2026 v131072 | Primera versión: ZR/ZL durante el intro → 3 s antes de la primera nota |
+| v2 (2026-11-12) | Let's Sing 2026 v131072 | También en Feat. Mantener ZR/ZL 3 s después de la última nota → 1 s antes del final (resultados y puntuación como siempre) |
 
 ## Licencia
 
@@ -125,6 +134,7 @@ GPL-2.0, igual que exlaunch, en el que se basa (ver `LICENSE`).
 ---
 
 **English.** Let's Sing 2026 (Switch, Atmosphère) mod: press ZR/ZL (SL/SR on a single Joy-Con) during a song's intro
-to jump to 3 s before the first note (normal mode only). **Only for update v131072 (version 0.2.0), build ID
+to jump to 3 s before the first note; hold it for 3 s after the last note to jump to 1 s before the end (results and
+score as usual). Classic and Feat modes; never online (Fest) or Career. **Only for update v131072 (version 0.2.0), build ID
 `1C344DD17322D4FA3E8F50063340C7D0`**. Install: unzip the release to the root of the SD card. Remove: delete
 `atmosphere/contents/0100EE4020D18000`. Build: `./build.sh` (devkitPro). GPL-2.0.
