@@ -34,7 +34,7 @@ ejecutable, y esas direcciones cambian con cada actualización.
 | Emuladores | Citron (nightly `308bc267c`): carga el mod y el juego arranca hasta el menú. El salto en una canción no está probado en el emulador |
 | Otras ediciones (2018 a 2025) | No: son otros juegos, con otro ejecutable |
 
-La v1 se probó en una consola real con Atmosphère el 2026-11-01. La v2 (2026-11-12) está instalada en la misma consola; la prueba de sus dos novedades está pendiente de confirmar.
+Probado en una consola real con Atmosphère: la v1 el 2026-11-01 y la v2 el 2026-11-12 (saltar el intro y el final, en Classic y en Feat).
 
 ### Cómo saber qué versión tienes
 
