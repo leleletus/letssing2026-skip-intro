@@ -6,6 +6,11 @@ Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère), con **ZR o ZL** (SL
 - **Saltar el final**: cuando ya no quedan notas y el video sigue, **mantener** el botón 3 s salta a 1 s antes del
   final. La canción termina como siempre: pantalla de resultados y puntuación guardada.
 
+- **Canción aleatoria** (v3, **en pruebas: todavía sin probar en la consola**): en la lista de canciones, pulsar
+  **ZL y ZR a la vez** empieza una canción al azar de la categoría donde está el cursor (Recomendadas, Favoritas,
+  una letra, un género...), igual que si se hubiera elegido con A: el juego pasa a la selección de jugadores con esa
+  canción. Si no es la que apetece, B vuelve a la lista y ZL+ZR saca otra.
+
 Usa la función del propio juego para moverse en la canción (`InGameSimple.SetTime`): audio, video y letra saltan
 juntos.
 
@@ -15,6 +20,9 @@ juntos.
 - Funciona en la partida normal (**Classic**) y en **Feat**. Nunca en los modos online (Fest) ni en Carrera.
 - Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta
   para saltar el intro.
+- La canción aleatoria sale solo de la categoría actual, nunca una bloqueada ni una cuyos datos no estén en la
+  consola, y no repite la anterior. La categoría se lee cuando baja el primero de los dos botones, así que da igual
+  cuál se pulse antes. Mientras se edita una lista de reproducción no hace nada.
 - Funciona igual con las canciones oficiales, las de los DLC y las añadidas con
   [Let's Sing UltraStar Converter](https://github.com/leleletus/ultrastar2singIt).
 
@@ -126,6 +134,7 @@ Los nombres de las funciones no cambian entre versiones, pero sus direcciones s�
 |---|---|---|
 | v1 (2026-11-01) | Let's Sing 2026 v131072 | Primera versión: ZR/ZL durante el intro → 3 s antes de la primera nota |
 | v2 (2026-11-12) | Let's Sing 2026 v131072 | También en Feat. Mantener ZR/ZL 3 s después de la última nota → 1 s antes del final (resultados y puntuación como siempre) |
+| v3 (2026-11-15, en pruebas) | Let's Sing 2026 v131072 | ZL+ZR en la lista de canciones → canción al azar de la categoría actual. Compila; **sin probar en la consola** |
 
 ## Licencia
 
