@@ -25,6 +25,10 @@ juntos.
 - Funciona en la partida normal (**Classic**) y en **Feat**. Nunca en los modos online (Fest) ni en Carrera.
 - Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta
   para saltar el intro.
+- Al volver con B, el juego deja el cursor sobre esa canción en la primera fila que la tiene, que puede ser otra
+  (por ejemplo «Todas las canciones» si «Para ti» se rehízo sin ella). Mientras el cursor siga sobre la canción que
+  sacó el mod, el siguiente ZL+ZR elige de la fila de la que salió esa canción; si mueves el cursor, de la fila
+  donde lo pongas.
 - La canción aleatoria nunca es una bloqueada ni una cuyos datos no estén en la consola, y no repite la anterior.
   La fila se lee cuando baja el primero de los dos botones, así que da igual cuál se pulse antes. Mientras se edita
   una lista de reproducción no hace nada.

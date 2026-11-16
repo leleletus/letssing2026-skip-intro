@@ -18,7 +18,10 @@
  * as if it had been chosen with A: the game goes on to the player selection with that song, and B comes back to
  * the list. Where the song comes from depends on the order of the list (v4): in Recommended, Language, Year, Theme
  * and Genre, from the row the cursor is in ("For you", "Top 10", "All songs", a language, a year...); in Title,
- * Artist and Favorites the rows are only letters, so from all the songs listed. The mod does what
+ * Artist and Favorites the rows are only letters, so from all the songs listed. Coming back with B, the game puts
+ * the cursor on that song in the first row that has it, which may be another row ("All songs" when "For you" was
+ * made again without it): while the cursor is still on the song the mod started, the next one comes from the row
+ * that song was taken from. The mod does what
  * SongsScreen.UpdateVx does when a cover is validated: SuggestionsManager.CurrentSuggestions (the suggestion list the
  * song came from, or null), GameManager.CurrentGameSong = song, GameManager.GoTo("PlayerSelection4P"). Locked songs
  * and songs whose data is not on the console are never picked. The category is read when the first of the two
@@ -48,6 +51,11 @@ namespace offsets {
 
     constexpr ptrdiff_t SongsScreen_songsGrid = 0xF8;
     constexpr ptrdiff_t SongsGrid_state = 0x2C;               // 0: covers, 1: details of a cover
+    constexpr uintptr_t GridSongCover_get_Song = 0x45EB4F0;
+    constexpr ptrdiff_t SongsGrid_currentCover = 0x120;       // GridSongCover under the cursor
+    constexpr ptrdiff_t BaseHubCategory_Name = 0x20;          // string
+    constexpr ptrdiff_t String_length = 0x10;
+    constexpr ptrdiff_t String_chars = 0x14;                  // UTF-16
     constexpr ptrdiff_t SongsGrid_CurrentCategory = 0x130;    // GridSongCategory
     constexpr ptrdiff_t SongsGrid_Categories = 0x148;         // GridSongCategory[]: every row of the list
     constexpr ptrdiff_t GridSongCategory_Category = 0xD0;     // BaseHubCategory
@@ -307,6 +315,44 @@ namespace {
         }
     }
 
+    constexpr int ROW_NAME_MAX = 96;
+    char16_t s_RowName[ROW_NAME_MAX];  // name of the row the last random song was taken from
+    int s_RowNameLength = 0;       // 0: none
+    int s_RowOrder = -1;           // order of the list then
+    char16_t s_SnapshotName[ROW_NAME_MAX];  // the same for the snapshot in use
+    int s_SnapshotNameLength = 0;
+    int s_SnapshotOrder = -1;
+
+    int RowName(void *row, char16_t *out) {
+        void *category = row ? At<void *>(row, offsets::GridSongCategory_Category) : nullptr;
+        void *name = category ? At<void *>(category, offsets::BaseHubCategory_Name) : nullptr;
+        int length = name ? At<int>(name, offsets::String_length) : 0;
+        if (length <= 0 || length > ROW_NAME_MAX) {
+            return 0;
+        }
+        std::memcpy(out, reinterpret_cast<char *>(name) + offsets::String_chars, length * sizeof(char16_t));
+        return length;
+    }
+
+    /* The row the last random song came from, when the cursor is still on that song in another row. */
+    void *RememberedRow(void *grid, void *row, void *rows, int order) {
+        void *cover = At<void *>(grid, offsets::SongsGrid_currentCover);
+        if (!cover || !rows || !s_LastSong || s_RowNameLength <= 0 || order != s_RowOrder
+                || Game<void *(*)(void *, void *)>(offsets::GridSongCover_get_Song)(cover, nullptr) != s_LastSong) {
+            return row;
+        }
+        char16_t name[ROW_NAME_MAX];
+        uintptr_t count = At<uintptr_t>(rows, offsets::Array_length);
+        for (uintptr_t i = 0; i < count && i < 512; i++) {
+            void *other = At<void *>(rows, offsets::Array_items + i * sizeof(void *));
+            if (other && RowName(other, name) == s_RowNameLength
+                    && std::memcmp(name, s_RowName, s_RowNameLength * sizeof(char16_t)) == 0) {
+                return other;
+            }
+        }
+        return row;
+    }
+
     /* The songs a random one is taken from: the row the cursor is in, or every row when the rows are letters. */
     void Snapshot(void *screen) {
         s_SongCount = 0;
@@ -321,14 +367,23 @@ namespace {
             return;
         }
         void *row = At<void *>(grid, offsets::SongsGrid_CurrentCategory);
-        void *category = row ? At<void *>(row, offsets::GridSongCategory_Category) : nullptr;
-        if (!category) {
+        if (!row) {
             return;
         }
         void *sort = Game<GetInstanceFn>(offsets::SortManager_get_Instance)(nullptr);
         int order = sort ? Game<IntGetterFn>(offsets::SortManager_get_CurrentSortType)(sort, nullptr) : -1;
         void *rows = At<void *>(grid, offsets::SongsGrid_Categories);
-        if (rows && (order == SORT_FAVORITE || order == SORT_TITLE || order == SORT_ARTIST)) {
+        bool whole_list = order == SORT_FAVORITE || order == SORT_TITLE || order == SORT_ARTIST;
+        if (!whole_list) {
+            row = RememberedRow(grid, row, rows, order);
+        }
+        void *category = At<void *>(row, offsets::GridSongCategory_Category);
+        if (!category) {
+            return;
+        }
+        s_SnapshotOrder = order;
+        s_SnapshotNameLength = whole_list ? 0 : RowName(row, s_SnapshotName);
+        if (rows && whole_list) {
             uintptr_t count = At<uintptr_t>(rows, offsets::Array_length);
             for (uintptr_t i = 0; i < count && i < 512; i++) {
                 AddRow(At<void *>(rows, offsets::Array_items + i * sizeof(void *)));
@@ -362,6 +417,9 @@ namespace {
         }
         void *song = s_Songs[pick];
         s_LastSong = song;
+        s_RowOrder = s_SnapshotOrder;
+        s_RowNameLength = s_SnapshotNameLength;
+        std::memcpy(s_RowName, s_SnapshotName, sizeof(s_RowName));
 
         void *suggestions = Game<GetInstanceFn>(offsets::SuggestionsManager_get_Instance)(nullptr);
         if (suggestions) {
