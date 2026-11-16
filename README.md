@@ -1,39 +1,61 @@
-# Let's Sing 2026: saltar el intro y el final de las canciones
+# Let's Sing 2026: canción aleatoria, saltar el intro y saltar el final
 
-Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère), con **ZR o ZL** (SL/SR en un Joy-Con suelto):
+Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère). Añade tres cosas al juego, todas con **ZL y ZR**:
 
-- **Saltar el intro**: durante el intro de una canción, **pulsar** el botón salta a 3 s antes de la primera nota.
-- **Saltar el final**: cuando ya no quedan notas y el video sigue, **mantener** el botón 3 s salta a 1 s antes del
-  final. La canción termina como siempre: pantalla de resultados y puntuación guardada.
+| Qué | Dónde | Cómo |
+|---|---|---|
+| **Canción aleatoria** | En la lista de canciones | Pulsar **ZL y ZR a la vez** |
+| **Saltar el intro** | Durante el intro de una canción | **Pulsar** ZR o ZL (SL/SR en un Joy-Con suelto) |
+| **Saltar el final** | Cuando ya no quedan notas y el video sigue | **Mantener** ZR o ZL 3 segundos |
 
-- **Canción aleatoria** (desde la v3): en la lista de canciones, pulsar **ZL y ZR a la vez** empieza una canción
-  al azar, igual que si se hubiera elegido con A: el juego pasa a la selección de jugadores con esa canción. Si no
-  es la que apetece, B vuelve a la lista y ZL+ZR saca otra. De dónde sale depende del orden de la lista (v4):
+Funciona en la partida normal (**Classic**) y en **Feat**, con las canciones oficiales, las de los DLC y las añadidas
+con [Let's Sing UltraStar Converter](https://github.com/leleletus/ultrastar2singIt). Nunca en los modos online (Fest)
+ni en Carrera. No cambia canciones, puntuaciones ni partidas guardadas.
 
-  | Orden de la lista | La canción sale de |
-  |---|---|
-  | Recomendadas | la fila donde está el cursor: «Para ti», «Top 10», «Todas las canciones»... |
-  | Idioma, Año, Tema, Género | la fila donde está el cursor: ese idioma, ese año... |
-  | Título, Artista, Favoritas | todas las canciones de la lista (ahí las filas son solo letras) |
+## Canción aleatoria
 
-Usa la función del propio juego para moverse en la canción (`InGameSimple.SetTime`): audio, video y letra saltan
-juntos.
+En la lista de canciones, **ZL y ZR a la vez** empiezan una canción al azar, igual que si se hubiera elegido con A:
+el juego pasa a la selección de jugadores con esa canción. Si no es la que apetece, **B** vuelve a la lista y ZL+ZR
+saca otra.
 
-- El intro solo se salta si faltan más de 6 s para la primera nota (en canciones con intro corto no hace nada).
-- El final solo se salta después de la última nota de todas las voces y si quedan más de 2 s. Hay que mantener el
-  botón 3 s seguidos, para que no pase sin querer; al soltarlo, la cuenta empieza de nuevo.
-- Funciona en la partida normal (**Classic**) y en **Feat**. Nunca en los modos online (Fest) ni en Carrera.
-- Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta
-  para saltar el intro.
-- Al volver con B, el juego deja el cursor sobre esa canción en la primera fila que la tiene, que puede ser otra
-  (por ejemplo «Todas las canciones» si «Para ti» se rehízo sin ella). Mientras el cursor siga sobre la canción que
-  sacó el mod, el siguiente ZL+ZR elige de la fila de la que salió esa canción; si mueves el cursor, de la fila
-  donde lo pongas.
-- La canción aleatoria nunca es una bloqueada ni una cuyos datos no estén en la consola, y no repite la anterior.
-  La fila se lee cuando baja el primero de los dos botones, así que da igual cuál se pulse antes. Mientras se edita
-  una lista de reproducción no hace nada.
-- Funciona igual con las canciones oficiales, las de los DLC y las añadidas con
-  [Let's Sing UltraStar Converter](https://github.com/leleletus/ultrastar2singIt).
+De dónde sale la canción depende de cómo esté ordenada la lista:
+
+| Orden de la lista | La canción sale de |
+|---|---|
+| Recomendadas | la fila donde está el cursor: «Para ti», «Canciones desafiantes», «Top 10», «Todas las canciones»... |
+| Idioma, Año, Tema, Género | la fila donde está el cursor: ese idioma, ese año, ese género... |
+| Título, Artista, Favoritas | todas las canciones de la lista (ahí las filas son solo letras) |
+
+- **Se queda en la misma fila al repetir.** Al volver con B, el juego deja el cursor sobre esa canción en la primera
+  fila que la tiene, que puede ser otra (por ejemplo «Todas las canciones»). Mientras el cursor siga sobre la canción
+  que sacó el mod, el siguiente ZL+ZR elige de la fila de la que salió; si mueves el cursor, de la fila donde lo
+  pongas.
+- No hace falta pulsar los dos botones exactamente a la vez: la fila se lee cuando baja el primero, antes de que el
+  juego reaccione a ese botón.
+- Nunca elige una canción bloqueada ni una cuyos datos no estén en la consola, y no repite la anterior.
+- También funciona con el detalle de una canción abierto. Mientras se edita una lista de reproducción no hace nada.
+- Las filas de Recomendadas («Para ti», los tops) las rehace el juego según se juega: la canción sale de lo que haya
+  en la fila en ese momento.
+
+## Saltar el intro
+
+Durante el intro de una canción, **pulsar** ZR o ZL salta a 3 s antes de la primera nota.
+
+- Solo si faltan más de 6 s para la primera nota (en canciones con intro corto no hace nada).
+- Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta.
+
+## Saltar el final
+
+Cuando ya no quedan notas y el video sigue, **mantener** ZR o ZL 3 s salta a 1 s antes del final. La canción termina
+como siempre: pantalla de resultados y puntuación guardada.
+
+- Solo después de la última nota de todas las voces y si quedan más de 2 s de canción. A mitad de canción, mantener
+  el botón no hace nada.
+- Hay que mantener el botón 3 s seguidos, para que no pase sin querer; al soltarlo, la cuenta empieza de nuevo. Los
+  3 s se cuentan con el reloj de la canción y no hay aviso en pantalla: contando deprisa se suelta antes de tiempo.
+
+Los saltos usan la función del propio juego para moverse en la canción (`InGameSimple.SetTime`): audio, video y
+letra saltan juntos. La canción aleatoria hace lo mismo que el juego al elegir una portada con A.
 
 ## Compatibilidad
 
@@ -51,7 +73,14 @@ ejecutable, y esas direcciones cambian con cada actualización.
 | Emuladores | Citron (nightly `308bc267c`): carga el mod y el juego arranca hasta el menú. El salto en una canción no está probado en el emulador |
 | Otras ediciones (2018 a 2025) | No: son otros juegos, con otro ejecutable |
 
-Probado en una consola real con Atmosphère: la v1 el 2026-11-01 y la v2 el 2026-11-12 (saltar el intro y el final, en Classic y en Feat; mantener el botón a mitad de canción no hace nada). La v3 el 2026-11-15 (canción aleatoria, en Favoritas). La v4 está sin probar.
+Probado en una consola real con Atmosphère:
+
+| Versión | Fecha | Qué se probó |
+|---|---|---|
+| v1 | 2026-11-01 | saltar el intro en Classic |
+| v2 | 2026-11-12 | saltar el intro y el final, en Classic y en Feat; mantener el botón a mitad de canción no hace nada |
+| v3 | 2026-11-15 | canción aleatoria en Favoritas |
+| v4 | 2026-11-15 | canción aleatoria repetida muchas veces desde la misma fila: no se sale de la fila. Sin confirmar todavía: la canción aleatoria en Feat (por el código del juego, es el mismo camino que en Classic) |
 
 ### Cómo saber qué versión tienes
 
@@ -68,14 +97,16 @@ usándolo. Cómo adaptarlo a otra versión: [Adaptarlo a otra versión](#adaptar
 
 ## Instalar / quitar
 
-1. Descarga `letssing2026_saltar_intro_v2.zip` de [Releases](../../releases) (la versión probada), o
-   `letssing2026_saltar_intro_v3.zip` (con la canción aleatoria), o la v4 de pruebas si está publicada.
+1. Descarga `letssing2026_saltar_intro_v4.zip` de [Releases](../../releases).
 2. Descomprímelo en la raíz de la SD. Quedan estos dos archivos:
    ```
    sd:/atmosphere/contents/0100EE4020D18000/exefs/subsdk9
    sd:/atmosphere/contents/0100EE4020D18000/exefs/main.npdm
    ```
-3. Abre el juego normalmente (con Atmosphère).
+3. Abre el juego normalmente (con Atmosphère). Si estaba abierto, ciérralo del todo y vuelve a abrirlo: el mod se
+   carga al arrancar el juego.
+
+Para actualizar desde una versión anterior del mod basta con cambiar `subsdk9`; `main.npdm` es el mismo en todas.
 
 Para quitarlo, borra la carpeta `sd:/atmosphere/contents/0100EE4020D18000`. No toca las canciones (el parche de
 canciones va en la carpeta del DLC) ni la partida guardada.
@@ -131,6 +162,12 @@ Los nombres de las funciones no cambian entre versiones, pero sus direcciones s�
    `KaraokeManager.get_KTime`. Comprueba también los campos (`InGame.songEnd`, `InGame.karaokeTime`,
    `KaraokeManager.KaraokeSong`, `KaraokeSong.KaraokeNotes`, `KaraokeSong.KaraokeNotesAll`,
    `KaraokeObject.StartTime`, `KaraokeObject.EndTime`).
+   Para la canción aleatoria: `SongsScreen.UpdateVx`, los `get_Instance` de `GameManager`, `SortManager`,
+   `SuggestionsManager` y `PlaylistManager`, `GameSong.get_IsLocked` y `get_CanRetrieveData`,
+   `GridSongCover.get_Song`, los campos de `SongsScreen`, `SongsGrid`, `GridSongCategory` y `BaseHubCategory`, los
+   puestos de `set_CurrentGameSong` y `GoTo` en la tabla virtual de `GameManager` (`Slot` en `dump.cs`: 0x138 +
+   16 × puesto) y, desensamblando, la casilla del texto `"PlayerSelection4P"`, la función que inicializa esas
+   casillas y la barrera de escritura (las tres se ven en `SongsScreen.UpdateVx`, donde el juego elige la canción).
 3. Rehaz `main.npdm` con el de la versión nueva (ver arriba). Actualiza el build ID y la versión en este README.
 
 ## Pendiente
@@ -144,8 +181,8 @@ Los nombres de las funciones no cambian entre versiones, pero sus direcciones s�
 |---|---|---|
 | v1 (2026-11-01) | Let's Sing 2026 v131072 | Primera versión: ZR/ZL durante el intro → 3 s antes de la primera nota |
 | v2 (2026-11-12) | Let's Sing 2026 v131072 | También en Feat. Mantener ZR/ZL 3 s después de la última nota → 1 s antes del final (resultados y puntuación como siempre) |
-| v3 (2026-11-15) | Let's Sing 2026 v131072 | ZL+ZR en la lista de canciones → canción al azar de la fila donde está el cursor. Probada en la consola el 2026-11-15 (en Favoritas) |
-| v4 (2026-11-15, en pruebas) | Let's Sing 2026 v131072 | La canción al azar sale de la fila actual en Recomendadas, Idioma, Año, Tema y Género, y de toda la lista en Título, Artista y Favoritas. Compila; **sin probar en la consola** |
+| v3 (2026-11-15) | Let's Sing 2026 v131072 | ZL+ZR en la lista de canciones → canción al azar de la fila donde está el cursor |
+| v4 (2026-11-15) | Let's Sing 2026 v131072 | La canción al azar sale de la fila actual en Recomendadas, Idioma, Año, Tema y Género, y de toda la lista en Título, Artista y Favoritas. Al repetir con B y ZL+ZR sigue en la misma fila aunque el juego mueva el cursor |
 
 ## Licencia
 
@@ -153,8 +190,12 @@ GPL-2.0, igual que exlaunch, en el que se basa (ver `LICENSE`).
 
 ---
 
-**English.** Let's Sing 2026 (Switch, Atmosphère) mod: press ZR/ZL (SL/SR on a single Joy-Con) during a song's intro
-to jump to 3 s before the first note; hold it for 3 s after the last note to jump to 1 s before the end (results and
-score as usual). Classic and Feat modes; never online (Fest) or Career. **Only for update v131072 (version 0.2.0), build ID
-`1C344DD17322D4FA3E8F50063340C7D0`**. Install: unzip the release to the root of the SD card. Remove: delete
-`atmosphere/contents/0100EE4020D18000`. Build: `./build.sh` (devkitPro). GPL-2.0.
+**English.** Let's Sing 2026 (Switch, Atmosphère) mod, all with ZL/ZR. **Random song:** in the song list, press ZL
+and ZR together to start a random song as if it had been chosen with A; B comes back to the list and ZL+ZR gives
+another one. It is taken from the row the cursor is in when the list is ordered by Recommended, Language, Year,
+Theme or Genre, and from the whole list in Title, Artist and Favorites. **Skip the intro:** press ZR/ZL (SL/SR on a
+single Joy-Con) during a song's intro to jump to 3 s before the first note. **Skip the end:** hold it for 3 s after
+the last note to jump to 1 s before the end (results and score as usual). Classic and Feat modes; never online
+(Fest) or Career. **Only for update v131072 (version 0.2.0), build ID `1C344DD17322D4FA3E8F50063340C7D0`**. Install:
+unzip the release to the root of the SD card. Remove: delete `atmosphere/contents/0100EE4020D18000`. Build:
+`./build.sh` (devkitPro). GPL-2.0.
