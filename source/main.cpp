@@ -14,9 +14,11 @@
  * InGameFeat has no UpdateVx of its own (it runs InGameSimple's) and InGameClassic's does not call InGameSimple's,
  * so each one is hooked.
  *
- * Random song (v3): in the song list (KaraokeHub, SongsScreen), pressing ZL and ZR together starts a random song of
- * the category the cursor is in (Recommended, Favorites, a letter, a genre...), as if it had been chosen with A: the
- * game goes on to the player selection with that song, and B comes back to the list. The mod does what
+ * Random song (v3): in the song list (KaraokeHub, SongsScreen), pressing ZL and ZR together starts a random song,
+ * as if it had been chosen with A: the game goes on to the player selection with that song, and B comes back to
+ * the list. Where the song comes from depends on the order of the list (v4): in Recommended, Language, Year, Theme
+ * and Genre, from the row the cursor is in ("For you", "Top 10", "All songs", a language, a year...); in Title,
+ * Artist and Favorites the rows are only letters, so from all the songs listed. The mod does what
  * SongsScreen.UpdateVx does when a cover is validated: SuggestionsManager.CurrentSuggestions (the suggestion list the
  * song came from, or null), GameManager.CurrentGameSong = song, GameManager.GoTo("PlayerSelection4P"). Locked songs
  * and songs whose data is not on the console are never picked. The category is read when the first of the two
@@ -47,6 +49,7 @@ namespace offsets {
     constexpr ptrdiff_t SongsScreen_songsGrid = 0xF8;
     constexpr ptrdiff_t SongsGrid_state = 0x2C;               // 0: covers, 1: details of a cover
     constexpr ptrdiff_t SongsGrid_CurrentCategory = 0x130;    // GridSongCategory
+    constexpr ptrdiff_t SongsGrid_Categories = 0x148;         // GridSongCategory[]: every row of the list
     constexpr ptrdiff_t GridSongCategory_Category = 0xD0;     // BaseHubCategory
     constexpr ptrdiff_t BaseHubCategory_songs = 0x30;         // List<GameSong>
     constexpr ptrdiff_t SuggestionCategory_Suggestions = 0x40;
@@ -265,19 +268,27 @@ namespace {
     void *s_LastSong = nullptr;
     u64 s_Random = 0;
 
-    /* The songs that can be sung now of the category the cursor is in. */
-    void Snapshot(void *screen) {
-        s_SongCount = 0;
-        s_Suggestions = nullptr;
-        void *grid = At<void *>(screen, offsets::SongsScreen_songsGrid);
-        if (!grid || At<u8>(grid, offsets::SongsGrid_state) > 1) {
-            return;
+    constexpr int SORT_RECOMMENDED = 0, SORT_FAVORITE = 1, SORT_TITLE = 2, SORT_ARTIST = 3;
+    constexpr int SEEN_SLOTS = 2 * MAX_SONGS;  // power of two
+    void *s_Seen[SEEN_SLOTS];
+
+    /* False when the song was already added (a song can be in two rows). */
+    bool FirstTime(void *song) {
+        uintptr_t slot = (reinterpret_cast<uintptr_t>(song) >> 4) * 0x9E3779B97F4A7C15ull >> 51;  // 13 bits
+        for (int tries = 0; tries < SEEN_SLOTS; tries++, slot = (slot + 1) & (SEEN_SLOTS - 1)) {
+            if (s_Seen[slot] == song) {
+                return false;
+            }
+            if (!s_Seen[slot]) {
+                s_Seen[slot] = song;
+                return true;
+            }
         }
-        void *playlists = Game<GetInstanceFn>(offsets::PlaylistManager_get_Instance)(nullptr);
-        if (playlists && Game<BoolGetterFn>(offsets::PlaylistManager_get_IsInPlaylist)(playlists, nullptr)) {
-            return;
-        }
-        void *row = At<void *>(grid, offsets::SongsGrid_CurrentCategory);
+        return false;
+    }
+
+    /* Adds the songs of a row (GridSongCategory) that can be sung now. */
+    void AddRow(void *row) {
         void *category = row ? At<void *>(row, offsets::GridSongCategory_Category) : nullptr;
         void *list = category ? At<void *>(category, offsets::BaseHubCategory_songs) : nullptr;
         void *items = list ? At<void *>(list, offsets::List_items) : nullptr;
@@ -290,13 +301,43 @@ namespace {
         auto has_data = Game<BoolGetterFn>(offsets::GameSong_get_CanRetrieveData);
         for (int i = 0; i < size && static_cast<uintptr_t>(i) < capacity && s_SongCount < MAX_SONGS; i++) {
             void *song = At<void *>(items, offsets::Array_items + i * sizeof(void *));
-            if (song && !is_locked(song, nullptr) && has_data(song, nullptr)) {
+            if (song && !is_locked(song, nullptr) && has_data(song, nullptr) && FirstTime(song)) {
                 s_Songs[s_SongCount++] = song;
             }
         }
+    }
+
+    /* The songs a random one is taken from: the row the cursor is in, or every row when the rows are letters. */
+    void Snapshot(void *screen) {
+        s_SongCount = 0;
+        s_Suggestions = nullptr;
+        std::memset(s_Seen, 0, sizeof(s_Seen));
+        void *grid = At<void *>(screen, offsets::SongsScreen_songsGrid);
+        if (!grid || At<u8>(grid, offsets::SongsGrid_state) > 1) {
+            return;
+        }
+        void *playlists = Game<GetInstanceFn>(offsets::PlaylistManager_get_Instance)(nullptr);
+        if (playlists && Game<BoolGetterFn>(offsets::PlaylistManager_get_IsInPlaylist)(playlists, nullptr)) {
+            return;
+        }
+        void *row = At<void *>(grid, offsets::SongsGrid_CurrentCategory);
+        void *category = row ? At<void *>(row, offsets::GridSongCategory_Category) : nullptr;
+        if (!category) {
+            return;
+        }
         void *sort = Game<GetInstanceFn>(offsets::SortManager_get_Instance)(nullptr);
-        if (sort && Game<IntGetterFn>(offsets::SortManager_get_CurrentSortType)(sort, nullptr) == 0
-                && IsClassName(category, "SuggestionCategory")) {
+        int order = sort ? Game<IntGetterFn>(offsets::SortManager_get_CurrentSortType)(sort, nullptr) : -1;
+        void *rows = At<void *>(grid, offsets::SongsGrid_Categories);
+        if (rows && (order == SORT_FAVORITE || order == SORT_TITLE || order == SORT_ARTIST)) {
+            uintptr_t count = At<uintptr_t>(rows, offsets::Array_length);
+            for (uintptr_t i = 0; i < count && i < 512; i++) {
+                AddRow(At<void *>(rows, offsets::Array_items + i * sizeof(void *)));
+            }
+        }
+        if (s_SongCount == 0) {  // the row itself (also if the list of rows gave nothing)
+            AddRow(row);
+        }
+        if (order == SORT_RECOMMENDED && IsClassName(category, "SuggestionCategory")) {
             s_Suggestions = At<void *>(category, offsets::SuggestionCategory_Suggestions);
         }
     }

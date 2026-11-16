@@ -6,10 +6,15 @@ Mod para **Let's Sing 2026** (Nintendo Switch, Atmosphère), con **ZR o ZL** (SL
 - **Saltar el final**: cuando ya no quedan notas y el video sigue, **mantener** el botón 3 s salta a 1 s antes del
   final. La canción termina como siempre: pantalla de resultados y puntuación guardada.
 
-- **Canción aleatoria** (v3, **en pruebas: todavía sin probar en la consola**): en la lista de canciones, pulsar
-  **ZL y ZR a la vez** empieza una canción al azar de la categoría donde está el cursor (Recomendadas, Favoritas,
-  una letra, un género...), igual que si se hubiera elegido con A: el juego pasa a la selección de jugadores con esa
-  canción. Si no es la que apetece, B vuelve a la lista y ZL+ZR saca otra.
+- **Canción aleatoria** (desde la v3): en la lista de canciones, pulsar **ZL y ZR a la vez** empieza una canción
+  al azar, igual que si se hubiera elegido con A: el juego pasa a la selección de jugadores con esa canción. Si no
+  es la que apetece, B vuelve a la lista y ZL+ZR saca otra. De dónde sale depende del orden de la lista (v4):
+
+  | Orden de la lista | La canción sale de |
+  |---|---|
+  | Recomendadas | la fila donde está el cursor: «Para ti», «Top 10», «Todas las canciones»... |
+  | Idioma, Año, Tema, Género | la fila donde está el cursor: ese idioma, ese año... |
+  | Título, Artista, Favoritas | todas las canciones de la lista (ahí las filas son solo letras) |
 
 Usa la función del propio juego para moverse en la canción (`InGameSimple.SetTime`): audio, video y letra saltan
 juntos.
@@ -20,9 +25,9 @@ juntos.
 - Funciona en la partida normal (**Classic**) y en **Feat**. Nunca en los modos online (Fest) ni en Carrera.
 - Se puede volver a usar al reintentar la canción. Un botón que ya estaba pulsado al empezar la canción no cuenta
   para saltar el intro.
-- La canción aleatoria sale solo de la categoría actual, nunca una bloqueada ni una cuyos datos no estén en la
-  consola, y no repite la anterior. La categoría se lee cuando baja el primero de los dos botones, así que da igual
-  cuál se pulse antes. Mientras se edita una lista de reproducción no hace nada.
+- La canción aleatoria nunca es una bloqueada ni una cuyos datos no estén en la consola, y no repite la anterior.
+  La fila se lee cuando baja el primero de los dos botones, así que da igual cuál se pulse antes. Mientras se edita
+  una lista de reproducción no hace nada.
 - Funciona igual con las canciones oficiales, las de los DLC y las añadidas con
   [Let's Sing UltraStar Converter](https://github.com/leleletus/ultrastar2singIt).
 
@@ -42,7 +47,7 @@ ejecutable, y esas direcciones cambian con cada actualización.
 | Emuladores | Citron (nightly `308bc267c`): carga el mod y el juego arranca hasta el menú. El salto en una canción no está probado en el emulador |
 | Otras ediciones (2018 a 2025) | No: son otros juegos, con otro ejecutable |
 
-Probado en una consola real con Atmosphère: la v1 el 2026-11-01 y la v2 el 2026-11-12 (saltar el intro y el final, en Classic y en Feat; mantener el botón a mitad de canción no hace nada).
+Probado en una consola real con Atmosphère: la v1 el 2026-11-01 y la v2 el 2026-11-12 (saltar el intro y el final, en Classic y en Feat; mantener el botón a mitad de canción no hace nada). La v3 el 2026-11-15 (canción aleatoria, en Favoritas). La v4 está sin probar.
 
 ### Cómo saber qué versión tienes
 
@@ -60,7 +65,7 @@ usándolo. Cómo adaptarlo a otra versión: [Adaptarlo a otra versión](#adaptar
 ## Instalar / quitar
 
 1. Descarga `letssing2026_saltar_intro_v2.zip` de [Releases](../../releases) (la versión probada), o
-   `letssing2026_saltar_intro_v3.zip` (versión de pruebas, con la canción aleatoria).
+   `letssing2026_saltar_intro_v3.zip` (con la canción aleatoria), o la v4 de pruebas si está publicada.
 2. Descomprímelo en la raíz de la SD. Quedan estos dos archivos:
    ```
    sd:/atmosphere/contents/0100EE4020D18000/exefs/subsdk9
@@ -135,7 +140,8 @@ Los nombres de las funciones no cambian entre versiones, pero sus direcciones s�
 |---|---|---|
 | v1 (2026-11-01) | Let's Sing 2026 v131072 | Primera versión: ZR/ZL durante el intro → 3 s antes de la primera nota |
 | v2 (2026-11-12) | Let's Sing 2026 v131072 | También en Feat. Mantener ZR/ZL 3 s después de la última nota → 1 s antes del final (resultados y puntuación como siempre) |
-| v3 (2026-11-15, en pruebas) | Let's Sing 2026 v131072 | ZL+ZR en la lista de canciones → canción al azar de la categoría actual. Compila; **sin probar en la consola** |
+| v3 (2026-11-15) | Let's Sing 2026 v131072 | ZL+ZR en la lista de canciones → canción al azar de la fila donde está el cursor. Probada en la consola el 2026-11-15 (en Favoritas) |
+| v4 (2026-11-15, en pruebas) | Let's Sing 2026 v131072 | La canción al azar sale de la fila actual en Recomendadas, Idioma, Año, Tema y Género, y de toda la lista en Título, Artista y Favoritas. Compila; **sin probar en la consola** |
 
 ## Licencia
 
