@@ -59,7 +59,8 @@ usándolo. Cómo adaptarlo a otra versión: [Adaptarlo a otra versión](#adaptar
 
 ## Instalar / quitar
 
-1. Descarga `letssing2026_saltar_intro_v2.zip` de [Releases](../../releases).
+1. Descarga `letssing2026_saltar_intro_v2.zip` de [Releases](../../releases) (la versión probada), o
+   `letssing2026_saltar_intro_v3.zip` (versión de pruebas, con la canción aleatoria).
 2. Descomprímelo en la raíz de la SD. Quedan estos dos archivos:
    ```
    sd:/atmosphere/contents/0100EE4020D18000/exefs/subsdk9
